@@ -15,11 +15,17 @@ const AnimatedClothes: React.FC<AnimatedClothesProps> = ({ images = [] }) => {
     const { extractDominantColor } = useColorExtractor();
 
     useEffect(() => {
+        console.log("Images updated:");
+        
         const extractColorForCurrentImage = async () => {
+            console.log('Extracting color for image index:', currentImageIndex);
+            
             if (images.length === 0 || dominantColors[currentImageIndex]) return;
 
             try {
                 const color = await extractDominantColor(images[currentImageIndex]);
+                console.log('Extracted color:', color);
+                
                 setDominantColors(prev => ({
                     ...prev,
                     [currentImageIndex]: color
@@ -31,6 +37,9 @@ const AnimatedClothes: React.FC<AnimatedClothesProps> = ({ images = [] }) => {
 
         extractColorForCurrentImage();
     }, [currentImageIndex, images, extractDominantColor, dominantColors]);
+    useEffect(() => {
+       setDominantColors({});
+    }, [images]);
 
     const handleAnimationIteration = useCallback(() => {
         if (images.length > 0) {
@@ -40,7 +49,7 @@ const AnimatedClothes: React.FC<AnimatedClothesProps> = ({ images = [] }) => {
         }
     }, [images.length])
 
-    const currentColor = dominantColors[currentImageIndex] || '#DCBD3088';
+    const currentColor = dominantColors[currentImageIndex] || '#DD0000088';
 
 
     if (images.length === 0) return null
